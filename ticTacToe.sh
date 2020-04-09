@@ -28,5 +28,18 @@ function assign(){
 		CPU="X"
 	fi
 }
+
+#FUNCTION TO TOSS
+function toss(){
+	coin=$(( RANDOM%2 ))
+	if (( $coin==0 ))
+	then
+		player=$PLAYER
+	else
+		player=$CPU
+	fi
+}
+
 displayBoard
 assign
+toss
