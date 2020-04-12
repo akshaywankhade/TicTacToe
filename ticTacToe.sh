@@ -46,6 +46,32 @@ function print(){
 	echo "1   ${board[3]} ${board[4]} ${board[5]}"
 	echo "2   ${board[6]} ${board[7]} ${board[8]}"
 }
+
+#FUNCTIONS TO PLAY GAME
+function playerPlay(){
+	read -p "Enter x : " x
+	read -p "Enter y : " y
+	local index=$(( $x*3+$y ))
+	if [ ${board[$index]} == "." ]
+	then
+		board[$index]=$PLAYER
+	else
+		echo "You can't place There."
+	fi
+}
+
+function cpuPlay(){
+	x=$(( RANDOM%3 ))
+	y=$(( RANDOM%3 ))
+	local index=$(( $x*3+$y ))
+	if [ ${board[$index]} == "." ]
+	then
+		board[$index]=$CPU
+	else
+		cpuPlay
+	fi
+}
+
 #FUNCTION TO CHECK WIN
 function check(){
 	if [ ${board[$1]} != "." ] && [ ${board[$1]} == ${board[$2]} ] && [ ${board[$2]} == ${board[$3]} ]
@@ -70,6 +96,8 @@ assign
 toss
 print
 gameCheck
+playerPlay
+cpuPlay
 
 #CHECKING WIN OR TIE OR TURN PLAYER
 if [ $gameStatus != 1 ]
