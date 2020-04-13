@@ -90,10 +90,46 @@ function gameCheck(){
 	check 0 4 8
 	check 2 4 6
 }
+#FUNCTION FOR CHECKING WIN MOVE
+function checkMove(){
+	if [ ${board[$1]} == "." ] && [ ${board[$2]} == ${board[$3]} ] ||
+		[ ${board[$2]} == "." ] && [ ${board[$1]} == ${board[$3]} ] ||
+		[ ${board[$3]} == "." ] && [ ${board[$2]} == ${board[$1]} ]
+	then
+		if [ ${board[$1]} == "." ]
+		then
+			winMove=$1
+		elif [ ${board[$2]} == "." ]
+		then
+			winMove=$2
+		elif [ ${board[$3]} == "." ]
+		then
+			winMove=$3
+		fi
+	fi
+}
 
+function checkWinMove(){
+	checkMove 0 1 2
+	checkMove 3 4 5
+	checkMove 6 7 8
+	checkMove 0 3 6
+	checkMove 1 4 7
+	checkMove 2 5 8
+	checkMove 0 4 8
+	checkMove 2 4 6
+}
+#PLAYING GAME
 reset
 assign
 toss
+if [ $player -eq $PLAYER ]
+then
+	playerPlay
+elif [ $player -eq $CPU ]
+then
+	cpuPlay
+fi
 print
 gameCheck
 playerPlay
