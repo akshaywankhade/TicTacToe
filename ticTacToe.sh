@@ -75,10 +75,31 @@ function cpuPlay(){
 	elif [ $blockMove != "." ]
 	then
 		index=$blockMove
+	elif [ $winMove == "." ] && [ $blockMove == "." ] &&
+		  [ ${board[0]} == "." ] || [ ${board[2]} == "." ] ||
+		  [ ${board[6]} == "." ] || [ ${board[8]} == "." ]
+	then
+		corner=$(( RANDOM%4 ))
+		case $corner in
+			0)
+				index=0
+			;;
+			1)
+				index=2
+			;;
+			2)
+				index=6
+			;;
+			3)
+				index=8
+			;;
+				echo "Invalid"
+			;;
+		esac	
 	else
 		x=$(( RANDOM%3 ))
 		y=$(( RANDOM%3 ))
-		local index=$(( $x*3+$y ))
+		 index=$(( $x*3+$y ))
 	fi
 	if [ ${board[$index]} == "." ]
 	then
