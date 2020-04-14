@@ -20,7 +20,6 @@ function displayBoard(){
 		fi
 	done
 }
-
 #FUNCTION TO ASSIGN LETTER TO THE PLAYER
 function assign(){
 	random=$(( RANDOM%2 ))
@@ -44,6 +43,7 @@ function toss(){
 		player=$CPU
 	fi
 }
+
 #FUNCTION TO PRINT BOARD
 function print(){
 	echo "r\c 0 1 2"
@@ -53,17 +53,20 @@ function print(){
 }
 
 #FUNCTIONS TO PLAY GAME
+#FOR PLAYER
 function playerPlay(){
-	read -p "Enter x : " x
-	read -p "Enter y : " y
-	local index=$(( $x*3+$y ))
+	read -p "Enter r : " r
+	read -p "Enter c : " c
+	local index=$(( $r*3+$c ))
 	if [ ${board[$index]} == "." ]
 	then
 		board[$index]=$PLAYER
 	else
 		echo "You can't place There."
+		playerPlay
 	fi
 }
+
 #FOR CPU(COMPUTER)
 function cpuPlay(){
 	local index=0
@@ -93,13 +96,14 @@ function cpuPlay(){
 			3)
 				index=8
 			;;
+			*)
 				echo "Invalid"
 			;;
-		esac	
+		esac
 	else
 		x=$(( RANDOM%3 ))
 		y=$(( RANDOM%3 ))
-		 index=$(( $x*3+$y ))
+		index=$(( $x*3+$y ))
 	fi
 	if [ ${board[$index]} == "." ]
 	then
@@ -109,7 +113,7 @@ function cpuPlay(){
 	fi
 }
 
-#FUNCTSSSION TO CHECK WIN
+#FUNCTION TO CHECK WIN
 function check(){
 	if [ ${board[$1]} != "." ] && [ ${board[$1]} == ${board[$2]} ] && [ ${board[$2]} == ${board[$3]} ]
 	then
@@ -127,11 +131,12 @@ function gameCheck(){
 	check 0 4 8
 	check 2 4 6
 }
+
 #FUNCTION FOR CHECKING WIN MOVE
 function checkMove(){
-	if [ ${board[$1]} == "." ] && [ ${board[$2]} == ${board[$3]} ] ||
-		[ ${board[$2]} == "." ] && [ ${board[$1]} == ${board[$3]} ] ||
-		[ ${board[$3]} == "." ] && [ ${board[$2]} == ${board[$1]} ]
+	if [[ ${board[$1]} == "." ]] && [[ ${board[$2]} == $CPU ]] && [[ ${board[$3]} == $CPU ]] ||
+		[[ ${board[$2]} == "." ]] && [[ ${board[$1]} == $CPU ]] && [[ ${board[$3]} == $CPU ]] ||
+		[[ ${board[$3]} == "." ]] && [[ ${board[$2]} == $CPU ]] && [[ ${board[$1]} == $CPU ]]
 	then
 		if [ ${board[$1]} == "." ]
 		then
@@ -156,6 +161,7 @@ function checkWinMove(){
 	checkMove 0 4 8
 	checkMove 2 4 6
 }
+
 #FUNCTION TO CHECK Opponent WIN MOVE AND BLOCK IT
 function checkOpMove(){
 	if [ ${board[$1]} == "." ] && [ ${board[$2]} == $PLAYER ] && [ ${board[$3]} == $PLAYER ] ||
@@ -186,46 +192,49 @@ function checkBlockMove(){
 	checkOpMove 2 4 6
 }
 
-
-#PLAYING GAME
-reset
+#FUNCTION TO PLAYING GAME
+function playGame(){
+displayBoard
 assign
 toss
 print
 while [ true ]
 do
 	(( turnCounter++ ))
-	if [ $player -eq $PLAYER ]
+	if [ $player == $PLAYER ]
 	then
 		playerPlay
-	elif [ $player -eq $CPU ]
+	elif [ $player == $CPU ]
 	then
 		cpuPlay
 	fi
-
+	print
 	gameCheck
-	playerPlay
-	cpuPlay
 
 	#CHECKING WIN OR TIE OR TURN PLAYER
 	if [ $gameStatus != 1 ]
 	then
 		echo "Game Over"
 		echo "$player Win"
-	elif [ $gameStatus -eq 1 ] && [ $turnCounter -eq 9 ]
+		break
+	elif [ $gameStatus == 1 ] && [ $turnCounter == 9 ]
 	then
 		echo "Its A Tie"
+		break
 	else
-		if [ $player -eq $PLAYER ]
- 		then
+		if [ $player == $PLAYER ]
+		then
 			player=$CPU
 		else
 			player=$PLAYER
 		fi
 	fi
-	
-	if [ $turnCounter -eq 9 ]
+
+	if [ $turnCounter == 9 ]
 	then
 		break
 	fi
 done
+}
+
+playGame
