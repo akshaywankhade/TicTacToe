@@ -1,6 +1,6 @@
 #!/bin/bash -x
 
-echo "..........WELCOME TO TIC-TAC-TOE.................."
+echo "..........WELCOME TO TIC-TAC-TOE................."
 
 #VARIABLES
 winMove="."
